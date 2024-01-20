@@ -34,7 +34,7 @@ public class JwtFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         //resolveToken으로 토큰을 받아온다.
         String jwt = resolveToken(httpServletRequest);
-        String requestURI = httpServletRequest.getRequestURI();
+        String requestURI = httpServletRequest.getRequestURI(); //요청한 API URL
 
         //이 토큰의 유효성 검증을 한다.
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
@@ -55,6 +55,7 @@ public class JwtFilter extends GenericFilterBean {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            //Bearer "토큰sfeosfjso" 식이기 때문에, 토큰은 7번째 인덱스부터 시작.
             return bearerToken.substring(7);
         }
 

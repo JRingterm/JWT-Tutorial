@@ -32,6 +32,7 @@ public class TokenProvider implements InitializingBean {
 
     //의존성 주입
     public TokenProvider(
+            //yml 파일에서 설정했던 secret 값과, 유효기간.
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         this.secret = secret;
@@ -47,7 +48,7 @@ public class TokenProvider implements InitializingBean {
 
     //Authentication 객체의 권한정보를 이용해서 토큰을 생성하는 createToken 메소드
     public String createToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()//권한들
+        String authorities = authentication.getAuthorities().stream()//권한들 가져옴.
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
@@ -56,10 +57,10 @@ public class TokenProvider implements InitializingBean {
 
         //JWT 토큰 생성 후 리턴
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
+                .setSubject(authentication.getName())//아이디
+                .claim(AUTHORITIES_KEY, authorities)//권한들
+                .signWith(key, SignatureAlgorithm.HS512)//알고리즘
+                .setExpiration(validity)//유효기간
                 .compact();
     }
 
